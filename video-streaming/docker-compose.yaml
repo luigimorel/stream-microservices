@@ -1,0 +1,24 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-video-storage-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+  app:
+    container_name: app-video-storage-container
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  mongo_data:

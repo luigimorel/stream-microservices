@@ -1,0 +1,24 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-recommendations
+    ports:
+      - "27016:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+  app:
+    container_name: recommendation-service
+    build: .
+    depends_on:
+      - mongo-recommendations
+    ports:
+      - "8082:8082"
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  mongo_data:

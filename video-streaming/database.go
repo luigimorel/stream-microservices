@@ -23,7 +23,7 @@ func ConnectMongoDB() (*mongo.Client, error) {
 		return nil, fmt.Errorf("failed to ping MongoDB: %v", err)
 	}
 
-	fmt.Println("successfully connected to MongoDB!")
+	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
 
 	return client, nil
 }

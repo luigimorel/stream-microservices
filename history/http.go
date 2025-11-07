@@ -9,6 +9,20 @@ import (
 	"gorm.io/gorm"
 )
 
+func HealthHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{
+			"message": "systems are okay",
+		})
+	}
+}
+
 func HistoryHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -37,8 +51,8 @@ func HistoryHandler(db *gorm.DB) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]any{
-			"user_id": userID,
-			"count":   len(videos),
+			"data":    videos,
+			"message": "user history retrieved successfully",
 		})
 	}
 }

@@ -4,9 +4,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
 	db, err := ConnectDB()
 	if err != nil {
 		panic(err)
@@ -19,6 +26,7 @@ func main() {
 		panic(fmt.Sprintf("failed to migrate database: %v", err))
 	}
 
+	http.HandleFunc("/health", HealthHandler())
 	http.HandleFunc("/history", HistoryHandler(db))
 
 	fmt.Println("Server starting on :8081")

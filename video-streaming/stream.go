@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -32,7 +33,7 @@ func StoreVideo(client *mongo.Client, video Video) error {
 		UpdatedAt:   time.Now(),
 	}
 
-	collection := client.Database("video-storage").Collection("videos")
+	collection := client.Database(string(os.Getenv("DATABASE"))).Collection("videos")
 	_, err := collection.InsertOne(ctx, saveVideo)
 	if err != nil {
 		return fmt.Errorf("failed to store video: %v", err)

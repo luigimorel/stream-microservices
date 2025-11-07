@@ -5,9 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Printf("error loading .env file: %v\n", err)
+		panic(err)
+	}
+
 	client, err := ConnectMongoDB()
 	if err != nil {
 		panic(err)
@@ -17,7 +24,9 @@ func main() {
 
 	defer client.Disconnect(context.TODO())
 
+	http.HandleFunc("/health", HealthHandler())
 	http.HandleFunc("/videos", VideoHandler(client))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Server is running on port 8083")
+	log.Fatal(http.ListenAndServe(":8083", nil))
 }

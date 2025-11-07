@@ -3,16 +3,17 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 func ConnectMongoDB() (*mongo.Client, error) {
-	uri := "mongodb://admin:password@localhost:27017/admin"
+	databaseURI := string(os.Getenv("MONGO_URI"))
 
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
+	opts := options.Client().ApplyURI(databaseURI).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(opts)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to MongoDB: %v", err)

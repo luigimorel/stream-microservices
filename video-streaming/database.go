@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 func ConnectMongoDB() (*mongo.Client, error) {
-	uri := "mongodb://admin:password@localhost:27017/admin"
+	uri := string(os.Getenv("MONGO_URI"))
 
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)

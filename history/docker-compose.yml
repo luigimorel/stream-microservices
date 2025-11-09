@@ -1,21 +1,37 @@
 services:
-  mongo:
-    image: postgres:latest
+  postgres:
+    image: postgres:15.8
     container_name: postgres-user-history
     ports:
       - "5431:5432"
     volumes:
-      - /var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
+      POSTGRES_DB: history
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d history"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     container_name: user-history-app
+    env_file:
+      - .env
     build: .
     depends_on:
-      - postgres-user-history
+      postgres:
+        condition: service_healthy
     ports:
       - "8081:8081"
+    restart: on-failure
+  rabbit:
+    image: rabbitmq:4.1.5-management
+    container_name: rabbitmq-user-history
+    ports:
+      - "5673:5672"
+      - "15673:15672"
 networks:
   default:
     driver: bridge

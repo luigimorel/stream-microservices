@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
+COPY .env ./
+
 RUN go mod download
 
 COPY . .
@@ -16,6 +18,8 @@ WORKDIR /app
 
 COPY --from=builder /app/app .
 
-EXPOSE 8080
+COPY --from=builder /app/.env .
+
+EXPOSE 8083
 
 CMD ["./app"]

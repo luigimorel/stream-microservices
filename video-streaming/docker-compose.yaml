@@ -1,7 +1,7 @@
 services:
   mongo:
     image: mongo:latest
-    container_name: mongo-video-storage-container
+    container_name: mongo-video-streaming-container
     ports:
       - "27017:27017"
     volumes:
@@ -9,13 +9,44 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--host",
+          "localhost",
+          "--port",
+          "27017",
+          "--username",
+          "admin",
+          "--password",
+          "password",
+          "--authenticationDatabase",
+          "admin",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     container_name: app-video-storage-container
+    env_file:
+      - .env
     build: .
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+    restart: on-failure
     ports:
-      - "8080:8080"
+      - "8083:8083"
+  rabbit:
+    image: rabbitmq:4.1.5-management
+    container_name: rabbitmq-video-streaming-container
+    ports:
+      - "5676:5672"
+      - "15676:15672"
 networks:
   default:
     driver: bridge

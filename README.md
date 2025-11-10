@@ -2,6 +2,7 @@
 
 A video streaming platform built with microservices architecture using Go, PostgreSQL, MongoDB, and RabbitMQ.
 
+![image of the RabbitMQ dashboard](./sc.png)
 ## Services
 
 - **History Service** (`:8081`) - Tracks user viewing history using PostgreSQL

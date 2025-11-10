@@ -2,6 +2,7 @@
 
 A video streaming platform built with microservices architecture using Go, PostgreSQL, MongoDB, and RabbitMQ.
 
+![a screen shot of the RabbitMQ dashboard](./sc.png)
 ## Services
 
 - **History Service** (`:8081`) - Tracks user viewing history using PostgreSQL
@@ -28,3 +29,4 @@ A video streaming platform built with microservices architecture using Go, Postg
 ## Health Checks
 
 All services expose `/health` endpoints for monitoring.
+

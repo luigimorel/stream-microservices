@@ -28,6 +28,7 @@ func main() {
 
 	http.HandleFunc("/health", HealthHandler())
 	http.HandleFunc("/history", HistoryHandler(db))
+	http.HandleFunc("/save", SaveUserHistory(db))
 
 	fmt.Println("Server starting on :8081")
 	log.Fatal(http.ListenAndServe(":8081", nil))
